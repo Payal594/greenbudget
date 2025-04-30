@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Farmer & Seller Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: rgba(46, 204, 113, 0.85);
+            --secondary-color: rgba(52, 152, 219, 0.85);
+            --dark-color: rgba(0, 0, 0, 0.25);
+            --light-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-size: cover;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(46, 204, 113, 1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(52, 152, 219, 1);
+            transform: translateY(-2px);
+        }
+        
+        .form-select {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .toggle-forms {
+            text-align: center;
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+        
+        .toggle-forms a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .role-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .farmer-indicator {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .seller-indicator {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .auth-card {
+                max-width: 100%;
+            }
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="backvideo.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <div class="container">
+        <div class="auth-card" id="login-card">
+            <h2>Login <span id="login-role-indicator" class="role-indicator d-none"></span></h2>
+            <form class="login-form">
+                <div class="mb-3">
+                    <input type="email" class="form-control" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="login-password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div class="toggle-forms">
+                    Don't have an account? <a id="show-signup">Sign up</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-card" id="signup-card" style="display: none;">
+            <h2>Signup</h2>
+            <form class="signup-form">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="signup-name" placeholder="Full Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" id="signup-email" placeholder="Email" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="signup-password" placeholder="Password" required>
+                </div>
+                <div class="mb-3">
+                    <select class="form-select" id="signup-role" required>
+                        <option value="">Select Role</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="seller">Seller</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-secondary">Signup</button>
+                <div class="toggle-forms">
+                    Already have an account? <a id="show-login">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form validation functions
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePassword(password) {
+            const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            return re.test(password);
+        }
+        function validateName(name) {
+    const trimmed = name.trim();
+    const re = /^[A-Za-z\s]{2,50}$/;
+    return trimmed.length > 0 && re.test(trimmed) && /[A-Za-z]/.test(trimmed);
+}
+
+
+        function showError(input, message) {
+            alert(message);
+            input.focus();
+        }
+        // Login form handling
+        document.querySelector('.login-form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+        const response = await fetch('http://localhost:5002/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message); // "Login successful"
+
+            // Store token & user data in localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            // Update UI role indicator
+            const role = data.user.role; // Get role from backend
+            const indicator = document.getElementById('login-role-indicator');
+            indicator.classList.remove('d-none');
+            indicator.textContent = role === 'farmer' ? 'Farmer' : 'Seller';
+            indicator.className = `role-indicator ${role}-indicator`;
+
+            // Redirect based on role
+            if (role === 'farmer') {
+    const userId = data.user.id;
+
+    // Check if farmer profile exists
+    fetch(`http://localhost:5002/api/farmer-profile/${userId}`)
+        .then(response => {
+            if (response.status === 404) {
+                // Profile doesn't exist, create it
+                const formData = new FormData();
+                formData.append("user_id", userId);
+                formData.append("location", "");
+                formData.append("last_login", new Date().toISOString().slice(0, 10));
+                formData.append("farm_size", "");
+                formData.append("farming_method", "");
+                formData.append("primary_crops", "");
+
+                return fetch("http://localhost:5002/api/farmer-profile", {
+                    method: "POST",
+                    body: formData
+                });
+            } else {
+                return Promise.resolve(); // Profile exists
+            }
+        })
+        .then(() => {
+            // Redirect to farmer dashboard
+            window.location.href = '/frontend/Dashboard.html';
+        })
+        .catch(error => {
+            console.error("Error checking/creating profile:", error);
+            alert("Something went wrong setting up your profile.");
+        });
+
+} else {
+    // Redirect seller
+    window.location.href = '/frontend/sellersproducts.html';
+}
+
+        } else {
+            alert(data.message || "Login failed");
+        }
+    } catch (err) {
+        alert("Error: " + err.message);
+    }
+});
+
+
+        // Signup form handling
+        document.querySelector('.signup-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const role = document.getElementById('signup-role').value;
+    if (!validateName(name)) {
+    showError(document.getElementById('signup-name'), 'Name must contain only letters and spaces (2-50 characters).');
+    return;
+}
+
+
+    if (!validateEmail(email)) {
+        showError(document.getElementById('signup-email'), 'Please enter a valid email address.');
+        return;
+    }
+    if (!validatePassword(password)) {
+        showError(document.getElementById('signup-password'), 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.');
+        return;
+    }
+    if (!role) {
+        alert('Please select a role.');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:5002/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, role })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Account created successfully! You can now login.');
+            document.getElementById('signup-card').style.display = 'none';
+            document.getElementById('login-card').style.display = 'block';
+            this.reset();
+        } else {
+            alert(data.message || 'Signup failed');
+        }
+    } catch (err) {
+        alert('Signup error: ' + err.message);
+    }
+});
+
+// Form toggling
+document.getElementById('show-signup').addEventListener('click', function() {
+    document.getElementById('login-card').style.display = 'none';
+    document.getElementById('signup-card').style.display = 'block';
+});
+
+document.getElementById('show-login').addEventListener('click', function() {
+    document.getElementById('signup-card').style.display = 'none';
+    document.getElementById('login-card').style.display = 'block';
+});
+
+// Role selection handling
+document.getElementById('signup-role').addEventListener('change', function() {
+    const role = this.value;
+    if (role === 'farmer') {
+        // Farmer-specific logic
+    } else if (role === 'seller') {
+        // Seller-specific logic
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - GreenBudget</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: rgba(52, 152, 219, 0.85);
+            --secondary-color: rgba(41, 128, 185, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .glassy-nav {
+            background: rgba(255, 255, 255, 0.25) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            border-radius: 0 0 15px 15px;
+            z-index: 1000;
+        }
+
+        .glassy-sidebar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid var(--glass-border);
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 80px;
+            transition: width 0.3s;
+        }
+        .glassy-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.glassy-sidebar ul li {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glassy-sidebar ul li a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 600;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.glassy-sidebar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #2980b9;
+}
+.glassy-sidebar .nav-text {
+            transition: all 0.3s ease;
+        }
+        
+        .glassy-sidebar .active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+        
+        .glassy-sidebar .active:hover {
+            background: rgba(46, 204, 113, 0.7);
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+            margin-top: 80px;
+            transition: margin-left 0.3s;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(31, 38, 135, 0.2);
+        }
+
+        .badge-role {
+            background: var(--primary-color);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+
+        .seller-badge {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand glassy-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-leaf me-2"></i>
+                <span class="d-none d-sm-inline">GreenBudget</span>
+                <span class="role-badge seller-badge ms-2">Seller</span>
+            </a>
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <aside class="sidebar glassy-sidebar">
+        <ul>
+            <li>
+                <a href="sellersproducts.html">
+                    <i class="fas fa-boxes me-2"></i>Product Listing
+                </a>
+            </li>
+            <li>
+                <a href="sellersprofile.html">
+                    <i class="fas fa-user-tie me-2"></i>Business Profile
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="content">
+        <h2 class="mb-4"><i class="fas fa-tachometer-alt me-2"></i>Seller Dashboard</h2>
+        
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="glass-card">
+                    <h5>Budget Summary</h5>
+                    <h2>₹1,84,750</h2>
+                    <p class="text-success">↑11.2% vs last month</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card">
+                    <h5>Recent Products</h5>
+                    <h2>24</h2>
+                    <p>+3 new this month</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card">
+                    <h5>Recent Transactions</h5>
+                    <h2>₹3,42,600</h2>
+                    <p>Across 56 products</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card">
+                    <h5>Quick Actions</h5>
+                    <h2>28%</h2>
+                    <p>Best: Tomatoes (42%)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="glass-card mb-4">
+                    <h4><i class="fas fa-chart-line me-2"></i>Sales Analytics</h4>
+                    <div style="height: 300px; background: rgba(255,255,255,0.3); border-radius: 10px;" class="d-flex align-items-center justify-content-center">
+                        [Sales Chart Visualization]
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h4><i class="fas fa-bell me-2"></i>Alerts</h4>
+                    <div class="alert-glass">
+                        <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                        <div>
+                            <strong>Low Stock: Organic Tomatoes</strong>
+                            <p>Only 120kg left (3 days supply)</p>
+                        </div>
+                    </div>
+                    <div class="alert-glass">
+                        <i class="fas fa-arrow-up text-warning me-2"></i>
+                        <div>
+                            <strong>Price Spike: Onions</strong>
+                            <p>Market price up 18% this week</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="glass-card mb-4">
+                    <h4><i class="fas fa-handshake me-2"></i>Quick Negotiations</h4>
+                    <div class="negotiation-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>Rajesh Farms</strong>
+                            <span class="badge badge-role">New</span>
+                        </div>
+                        <p>Wheat - 500kg @ ₹22/kg</p>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-sm">Accept</button>
+                            <button class="btn btn-outline-primary btn-sm">Counter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h4><i class="fas fa-chart-pie me-2"></i>Market Trends</h4>
+                    <div class="trend-item">
+                        <span>Tomatoes</span>
+                        <span class="text-success">₹110/kg ↑15%</span>
+                    </div>
+                    <div class="trend-item">
+                        <span>Wheat</span>
+                        <span class="text-danger">₹2,300/ton ↓12%</span>
+                    </div>
+                    <div class="trend-item">
+                        <span>Onions</span>
+                        <span class="text-success">₹35/kg ↑18%</span>
+                    </div>
+                    <div class="trend-item">
+                        <span>Rishi</span>
+                        <span class="text-danger">₹2,600/ton ↓30%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.glassy-sidebar');
+            const content = document.querySelector('.content');
+            sidebar.classList.toggle('sidebar-collapsed');
+            content.classList.toggle('content-expanded');
+        }
+
+        function logout() {
+            // Implement logout functionality
+            alert('Logged out successfully!');
+        }
+    </script>
+</body>
+</html> 

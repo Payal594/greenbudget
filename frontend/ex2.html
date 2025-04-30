@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - GreenBudget</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: rgba(46, 204, 113, 0.85);
+            --secondary-color: rgba(52, 152, 219, 0.85);
+            --danger-color: rgba(231, 76, 60, 0.85);
+            --dark-color: rgba(0, 0, 0, 0.25);
+            --light-color: rgba(255, 255, 255, 0.9);
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .glassy-nav {
+            background: rgba(255, 255, 255, 0.25) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            border-radius: 0 0 15px 15px;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+        
+        .glassy-sidebar {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 80px;
+            transition: all 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-collapsed .nav-text {
+            display: none;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            padding: 0;
+            margin: 5px 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar li:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .sidebar a {
+            color: #2c3e50;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            min-width: 25px;
+            text-align: center;
+        }
+        
+        .sidebar .active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+        
+        /* Main Content */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            transition: all 0.3s ease;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+        }
+        
+        .content-expanded {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        /* Profile Container */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* Profile Card */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-right: 25px;
+        }
+        
+        .profile-info h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        
+        .profile-info p {
+            margin: 5px 0 0;
+            color: #7f8c8d;
+        }
+        
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .detail-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .detail-item h4 {
+            margin: 0 0 10px;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-item p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        
+        /* Edit Button */
+        .edit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .edit-btn:hover {
+            background: rgba(46, 204, 113, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        
+        /* Role Indicator */
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        
+        .farmer-badge {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .glassy-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar-show {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .glass-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Glassmorphism Navbar -->
+    <nav class="navbar navbar-expand glassy-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-leaf me-2"></i>
+                <span class="d-none d-sm-inline">GreenBudget</span>
+                <span class="role-badge farmer-badge ms-2">Farmer</span>
+            </a>
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Glassmorphism Sidebar -->
+    <aside class="sidebar glassy-sidebar">
+        <ul>
+            <li>
+                <a href="dashboard.html">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="budget.html">
+                    <i class="fas fa-wallet"></i>
+                    <span class="nav-text">Budget</span>
+                </a>
+            </li>
+            <li>
+                <a href="products.html">
+                    <i class="fas fa-seedling"></i>
+                    <span class="nav-text">Products</span>
+                </a>
+            </li>
+           
+            <li class="active">
+                <a href="profile.html">
+                    <i class="fas fa-user"></i>
+                    <span class="nav-text">Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+    <!-- Main Content -->
+    <main class="content fade-in">
+        <div class="glass-container">
+            <h2><i class="fas fa-user me-2"></i>Your Profile</h2>
+            
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <h3 id="profile-name">Loading...</h3>
+                        <p id="profile-email">rajesh.kumar@gmail.com</p>
+                        <span class="role-badge farmer-badge">Farmer</span>
+                    </div>
+                </div>
+                
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <h4>Contact Number</h4>
+                        <p id="profile-phone">+91 88866 67005</p>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <h4>Location</h4>
+                        <p id="profile-location">Nizamabad, India</p>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <h4>Account Created</h4>
+                        <p id="profile-created">May 15, 2022</p>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <h4>Last Login</h4>
+                        <p id="profile-last-login">June 10, 2023</p>
+                    </div>
+                </div>
+                
+                <button class="edit-btn" id="edit-profile-btn">
+                    <i class="fas fa-edit me-2"></i>Edit Profile
+                </button>
+            </div>
+            
+            <!-- Additional Profile Sections -->
+            <div class="profile-section">
+                <h4><i class="fas fa-tractor me-2" ></i>Farm Details</h4>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <h4>Farm Size</h4>
+                        <p id="profile-farm-size">5 Acres</p>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <h4>Primary Crops</h4>
+                        <p id="profile-crops">Wheat, Rice, Vegetables</p>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <h4>Farming Method</h4>
+                        <p id="profile-method">Organic</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <form id="editProfileForm" enctype="multipart/form-data">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Profile</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name</label>
+              <input type="text" name="name" class="form-control" id="editName" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-control" id="editEmail" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" name="contact_number" class="form-control" id="editPhone">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Location</label>
+              <input type="text" name="location" class="form-control" id="editLocation">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Farm Size</label>
+              <input type="text" name="farm_size" class="form-control" id="editFarmSize">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Primary Crops</label>
+              <input type="text" name="primary_crops" class="form-control" id="editCrops">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Farming Method</label>
+              <input type="text" name="farming_method" class="form-control" id="editMethod">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Profile Image</label>
+              <input type="file" name="profile_image" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+    </main>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar collapse/expand
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.glassy-sidebar');
+            const content = document.querySelector('.content');
+            
+            if (window.innerWidth > 992) {
+                // Desktop view - partial collapse
+                sidebar.classList.toggle('sidebar-collapsed');
+                content.classList.toggle('content-expanded');
+            } else {
+                // Mobile view - full collapse
+                sidebar.classList.toggle('sidebar-show');
+            }
+        }
+        
+        // Highlight active menu item
+        document.querySelectorAll('.sidebar li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar li').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                // In a real app, you would handle the logout process here
+                alert('You have been logged out. Redirecting to login page...');
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // Edit profile functionality
+        document.getElementById('edit-profile-btn').addEventListener('click', function() {
+            // In a real app, this would open an edit profile modal/form
+            alert('Edit profile functionality would open a form in a real application');
+        });
+        
+        // In a real app, you would fetch this data from your backend
+        document.addEventListener('DOMContentLoaded', function() {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (!user || !user.id) {
+        alert('User not logged in!');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const userId = user.id;
+
+    fetch(`http://localhost:5002/api/farmer-profile/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('profile-name').textContent = data.name;
+            document.getElementById('profile-email').textContent = data.email;
+            document.getElementById('profile-phone').textContent = data.contact_number || 'N/A';
+            document.getElementById('profile-location').textContent = data.location || 'N/A';
+            document.getElementById('profile-created').textContent = data.account_created || 'N/A';
+            document.getElementById('profile-last-login').textContent = data.last_login || 'N/A';
+            document.getElementById('profile-farm-size').textContent = data.farm_size || 'N/A';
+    document.getElementById('profile-crops').textContent = data.primary_crops || 'N/A';
+    document.getElementById('profile-method').textContent = data.farming_method || 'N/A';
+
+            if (data.profile_image_url) {
+                document.querySelector('.profile-avatar').src = data.profile_image_url;
+            }
+
+            const roleBadge = document.querySelector('.role-badge');
+            roleBadge.textContent = data.role.charAt(0).toUpperCase() + data.role.slice(1);
+        })
+        .catch(error => console.error('Error loading profile:', error));
+});
+
+        // Open Edit Modal
+document.getElementById('edit-profile-btn').addEventListener('click', function () {
+    const name = document.getElementById('profile-name').textContent;
+    const email = document.getElementById('profile-email').textContent;
+    const phone = document.getElementById('profile-phone').textContent;
+    const location = document.getElementById('profile-location').textContent;
+
+    document.getElementById('editName').value = name;
+    document.getElementById('editEmail').value = email;
+    document.getElementById('editPhone').value = phone;
+    document.getElementById('editLocation').value = location;
+
+    // show modal
+    const modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+    modal.show();
+});
+// Submit edited profile
+document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.id) {
+        alert('User not logged in!');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const userId = user.id;
+    const formData = new FormData(this);
+
+    fetch(`http://localhost:5002/api/farmer-profile/${userId}`, {
+        method: 'PUT',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Profile updated successfully!');
+        location.reload(); // Reload page to fetch updated profile
+    })
+    .catch(error => {
+        console.error('Error updating profile:', error);
+        alert('Failed to update profile');
+    });
+});
+
+
+    </script>
+</body>
+</html>

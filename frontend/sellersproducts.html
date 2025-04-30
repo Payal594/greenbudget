@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* COPY OF FARMER PRODUCT STYLES WITH SELLER COLORS */
+        :root {
+            --primary-color: rgba(52, 152, 219, 0.85); /* Seller blue */
+            --secondary-color: rgba(155, 89, 182, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .glassy-nav {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  height: calc(100vh - 60px);
+  width: 280px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  padding-top: 20px;
+  overflow-y: auto;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 12px 25px;
+}
+
+.sidebar ul li a {
+  display: block;
+  text-decoration: none;
+  font-weight: 600;
+  color: #2c3e50;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--primary-color);
+}
+
+.sidebar ul li.active a {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: var(--primary-color);
+}
+
+
+        .content {
+            margin-left: 280px;
+            padding: 30px;
+            margin-top: 80px;
+        }
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(31, 38, 135, 0.2);
+        }
+
+        .badge-role {
+            background: var(--primary-color);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+
+        .seller-badge {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .table {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-sm {
+            font-size: 0.875rem;
+        }
+
+        /* Seller-specific additions */
+        .bulk-order-btn {
+            background: var(--secondary-color);
+        }
+        .supplier-badge {
+            background: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (Same style as farmer) -->
+    <nav class="navbar navbar-expand glassy-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-leaf me-2"></i>
+                <span class="d-none d-sm-inline">GreenBudget</span>
+                <span class="role-badge seller-badge ms-2">Seller</span>
+            </a>
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+
+    <!-- Sidebar (Seller items) -->
+    <aside class="sidebar ">
+        <ul>
+            
+            <li>
+                <a href="sellersproducts.html">
+                    <i class="fas fa-boxes me-2"></i>Product Listing
+                </a>
+            </li>
+            <li>
+                <a href="sellersprofile.html">
+                    <i class="fas fa-user-tie me-2"></i>Business Profile
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="logoutUser()">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </li>
+            
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="glass-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-boxes me-2"></i>Product Listing</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="fas fa-plus me-2"></i>Add Product
+                </button>
+            </div>
+
+            <!-- Product Listing Table -->
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Image</th> <!-- New column for product image -->
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Supplier</th>
+                        <th>Price</th>
+                        <th>Available Stock</th>
+                        <th>MOQ</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example of a product listing with image -->
+                  
+                    <!-- Add more product rows here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+   <!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addProductForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category (Fruits, Vegetables, Dairy, etc.)</label>
+                        <input type="text" class="form-control" id="category" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Product Description</label>
+                        <textarea class="form-control" id="description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label" >Price</label>
+                        <input type="number" class="form-control" id="price"  min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Available Stock</label>
+                        <input type="number" class="form-control" id="stock" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="moq" class="form-label">Minimum Order Quantity (MOQ)</label>
+                        <input type="number" class="form-control" id="moq" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Product Image</label>
+                        <input type="file" class="form-control" id="productImage" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+       function logoutUser() {
+    localStorage.removeItem('user'); // Clear user session
+    window.location.href = 'login.html'; // Redirect to login page
+}
+
+
+        // Same toggle function as farmer dashboard
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.glassy-sidebar');
+            if (window.innerWidth > 992) {
+                sidebar.classList.toggle('sidebar-collapsed');
+                document.querySelector('.content').classList.toggle('content-expanded');
+            } else {
+                sidebar.classList.toggle('sidebar-show');
+            }
+        }
+        function loadProducts() {
+    const user = JSON.parse(localStorage.getItem('user'));
+const sellerId = user?.id;
+
+fetch(`http://localhost:5002/api/products/seller/${sellerId}`)
+
+        .then(response => response.json())
+        .then(products => {
+            const tbody = document.querySelector('table tbody');
+            tbody.innerHTML = '';
+
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td><img src="http://localhost:5002${product.image_url}" alt="${product.name}" class="product-image" style="width:60px;height:60px;object-fit:cover;"></td>
+                    <td>${product.name}</td>
+                    <td>${product.description}</td> 
+                    <td>Seller ID: ${product.seller_id}</td> <!-- You can replace with seller name if available -->
+                    <td>₹${product.price}/${product.unit}</td>
+                    <td>${product.stock_quantity}</td>
+                    <td>${product.unit}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(error => console.error('Error loading products:', error));
+}
+document.addEventListener('DOMContentLoaded', function() {
+    loadProducts();
+});
+
+
+        // Handle form submission for adding a new product
+        document.getElementById('addProductForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem('user')); // Assuming seller info stored in localStorage
+    if (!user || !user.id) {
+        alert('Seller not logged in!');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const sellerId = user.id; // seller_id needed
+
+    const formData = new FormData();
+    formData.append('seller_id', sellerId);
+    formData.append('name', document.getElementById('productName').value);
+    formData.append('category', document.getElementById('category').value);
+    formData.append('description', document.getElementById('description').value);
+    formData.append('price', document.getElementById('price').value);
+    formData.append('unit', document.getElementById('moq').value); // Assuming MOQ is the unit (you can fix this if needed)
+    formData.append('stock_quantity', document.getElementById('stock').value);
+    
+    const productImage = document.getElementById('productImage').files[0];
+    if (productImage) {
+        formData.append('image', productImage);
+    }
+
+    fetch('http://localhost:5002/api/products', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+    if (data.message === 'Product added successfully') {
+        alert('Product added successfully!');
+        loadProducts(); // Refresh product list
+
+        const form = document.getElementById('addProductForm');
+        form.reset(); // ✅ proper reset
+        bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide(); // ✅ hide modal
+    } else {
+        throw new Error('Failed to add product');
+    }
+})
+
+    .catch(error => {
+        console.error('Error adding product:', error);
+        alert('Failed to add product.');
+    });
+});
+function deleteProduct(productId) {
+    if (confirm('Are you sure you want to delete this product?')) {
+        fetch(`http://localhost:5002/api/products/${productId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Product deleted successfully');
+            loadProducts();
+        })
+        .catch(error => {
+            console.error('Error deleting product:', error);
+            alert('Failed to delete product.');
+        });
+    }
+}
+
+
+    </script>
+</body>
+</html> 

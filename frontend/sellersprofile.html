@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile - Farmer & Seller Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: rgba(52, 152, 219, 0.85); ;
+            --secondary-color: rgba(52, 152, 219, 0.85);
+            --dark-color: rgba(0, 0, 0, 0.25);
+            --light-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .profile-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 30px;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--secondary-color);
+            margin-right: 30px;
+        }
+        
+        .profile-info h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .profile-role {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        
+        .profile-stats {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            margin-right: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .product-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .product-price {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .btn-edit {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit:hover {
+            background: rgba(52, 152, 219, 1);
+            transform: translateY(-2px);
+        }
+        
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .nav-tabs .nav-link {
+            color: #7f8c8d;
+            font-weight: 600;
+            border: none;
+            padding: 12px 20px;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--secondary-color);
+            background: transparent;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        .glassy-nav {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .glassy-sidebar {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid var(--glass-border);
+            width: 280px;
+        }
+        .glassy-sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: calc(100% - 60px);
+    padding-top: 20px;
+    padding-left: 0;
+    padding-right: 0;
+    overflow-y: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.glassy-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.glassy-sidebar ul li {
+    padding: 12px 25px;
+    transition: all 0.3s ease;
+}
+
+.glassy-sidebar ul li a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    display: block;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
+.glassy-sidebar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: var(--primary-color);
+}
+
+.glassy-sidebar ul li.active a {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+
+        .content {
+            margin-left: 280px;
+            padding: 30px;
+            margin-top: 80px;
+        }
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(31, 38, 135, 0.2);
+        }
+
+        
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        
+
+        
+        /* Modal Styles */
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 20px;
+        }
+        
+        .modal-header, .modal-footer {
+            border: none;
+        }
+        
+        .modal-title {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+        }
+        
+        .btn-primary:hover {
+            background-color: rgba(52, 152, 219, 1);
+        }
+        .badge-role {
+            background: var(--primary-color);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+
+        .seller-badge {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .table {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-sm {
+            font-size: 0.875rem;
+        }
+
+        /* Seller-specific additions */
+        .bulk-order-btn {
+            background: var(--secondary-color);
+        }
+      
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+      <!-- Navbar (Same style as farmer) -->
+      <nav class="navbar navbar-expand glassy-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-leaf me-2"></i>
+                <span class="d-none d-sm-inline">GreenBudget</span>
+                <span class="role-badge seller-badge ms-2">Seller</span>
+            </a>
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+
+    <!-- Sidebar (Seller items) -->
+    <aside class="sidebar glassy-sidebar">
+        <ul>
+           
+            <li>
+                <a href="sellersproducts.html">
+                    <i class="fas fa-boxes me-2"></i>Product Listing
+                </a>
+            </li>
+            <li>
+                <a href="sellersprofile.html">
+                    <i class="fas fa-user-tie me-2"></i>Business Profile
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="logoutUser()">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+
+    
+    <main>
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Seller Avatar" class="profile-avatar">
+                <div class="profile-info">
+                    <h2 id="profileName">Sarah Johnson <span class="profile-role">Seller</span></h2>
+<p><i class="fas fa-map-marker-alt"></i> <span id="profileAddress">Portland, Oregon</span></p>
+<p><i class="fas fa-envelope"></i> <span id="profileEmail">sarah.johnson@example.com</span></p>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">142</div>
+                            <div class="stat-label">Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2.4K</div>
+                            <div class="stat-label">Customers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                
+               
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">Profile Settings</button>
+                </li>
+            </ul>
+            
+           
+                
+                <div class="tab-pane fade" id="settings" role="tabpanel">
+                    <h3 class="section-title">Profile Settings</h3>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label"> First Name</label>
+                                    <input type="text" class="form-control" id="firstName" value="Sara">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label"> Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" value="Khan">
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="sarakhan@gmail.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" value="(503) 555-0123">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" rows="3">123 Farm Lane, Portland, OR 97201</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" rows="3">Local organic farmer specializing in seasonal produce and free-range eggs. Committed to sustainable farming practices.</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileImageInput" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" id="profileImageInput" accept="image/*">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-secondary">Update Profile</button>
+                    </form>
+                    
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+         function logoutUser() {
+    localStorage.removeItem('user'); // Clear user session
+    window.location.href = 'login.html'; // Redirect to login page
+}
+        function validatePassword(password) {
+            const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            return re.test(password);
+        }
+    
+        
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+const userId = user?.id;
+
+    if (!userId) {
+        alert("User ID not found in localStorage.");
+        return;
+    }
+
+    fetch(`http://localhost:5002/api/seller-profile/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            const nameParts = data.name ? data.name.split(" ") : ["", ""];
+            document.getElementById("firstName").value = nameParts[0];
+            document.getElementById("lastName").value = nameParts.slice(1).join(" ");
+            document.getElementById("email").value = data.email;
+            document.getElementById("phone").value = data.contact_number || '';
+            document.getElementById("address").value = data.address || '';
+            document.getElementById("bio").value = data.bio || '';
+            if (data.profile_image_url) {
+                document.querySelector(".profile-avatar").src = data.profile_image_url;
+            }
+            document.getElementById("profileName").innerHTML = `${data.name} <span class="profile-role">Seller</span>`;
+document.getElementById("profileAddress").textContent = data.address || '';
+document.getElementById("profileEmail").textContent = data.email || '';
+
+        })
+        .catch(err => console.error("Error loading profile:", err));
+
+    document.querySelector('#settings form:first-of-type').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const fullName = `${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`.trim();
+        const formData = new FormData();
+        formData.append("name", fullName);
+        formData.append("contact_number", document.getElementById("phone").value);
+        formData.append("address", document.getElementById("address").value);
+        formData.append("bio", document.getElementById("bio").value);
+
+        const imageFile = document.getElementById("profileImageInput").files[0];
+        if (imageFile) {
+            formData.append("profile_image", imageFile);
+        }
+
+        fetch(`http://localhost:5002/api/seller-profile/${userId}`, {
+            method: "PUT",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Profile updated successfully!");
+            location.reload();
+        })
+        .catch(err => {
+            console.error("Update failed:", err);
+            alert("Failed to update profile.");
+        });
+    });
+});
+
+</script>
+</body>
+</html>  

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management - GreenBudget</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: rgba(46, 204, 113, 0.85);
+            --secondary-color: rgba(52, 152, 219, 0.85);
+            --danger-color: rgba(231, 76, 60, 0.85);
+            --dark-color: rgba(0, 0, 0, 0.25);
+            --light-color: rgba(255, 255, 255, 0.9);
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        /* Glassmorphism Navbar */
+        .glassy-nav {
+            background: rgba(255, 255, 255, 0.25) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            border-radius: 0 0 15px 15px;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+        
+        /* Glassmorphism Sidebar */
+        .glassy-sidebar {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 80px;
+            transition: all 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-collapsed .nav-text {
+            display: none;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            padding: 0;
+            margin: 5px 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar li:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .sidebar a {
+            color: #2c3e50;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            min-width: 25px;
+            text-align: center;
+        }
+        
+        .sidebar .active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+        
+        /* Main Content */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            transition: all 0.3s ease;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+        }
+        
+        .content-expanded {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        /* Budget Container */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 30px;
+            width: 100%;
+            max-width: 100%;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(46, 204, 113, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        
+        .budget-summary {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .income {
+            color: #27ae60;
+        }
+        
+        .expense {
+            color: #e74c3c;
+        }
+        
+        .expense-list {
+            margin-top: 30px;
+        }
+        
+        .expense-item {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .expense-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .expense-name {
+            font-weight: 500;
+        }
+        
+        .expense-amount {
+            font-weight: 600;
+        }
+        
+        .expense-date {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        .delete-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(231, 76, 60, 1);
+            transform: scale(1.05);
+        }
+        
+        .category-select {
+            margin-bottom: 15px;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        
+        /* Role Indicator */
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        .chart-container {
+  width: 350px;
+  height: 300px;
+  margin: auto;
+  display:flex;
+}
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display:flex;
+}
+
+        
+        .farmer-badge {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .glassy-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar-show {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .glass-container {
+                padding: 20px;
+            }
+            
+            .expense-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .expense-details {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Glassmorphism Navbar -->
+    <nav class="navbar navbar-expand glassy-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-leaf me-2"></i>
+                <span class="d-none d-sm-inline">GreenBudget</span>
+                <span class="role-badge farmer-badge ms-2">Farmer</span>
+            </a>
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Glassmorphism Sidebar -->
+    <aside class="sidebar glassy-sidebar">
+        <ul>
+            <li>
+                <a href="dashboard.html">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Home</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="budget.html">
+                    <i class="fas fa-wallet"></i>
+                    <span class="nav-text">Budget</span>
+                </a>
+            </li>
+            <li>
+                <a href="products.html">
+                    <i class="fas fa-seedling"></i>
+                    <span class="nav-text">Products</span>
+                </a>
+            </li>
+           
+            <li>
+                <a href="profile.html">
+                    <i class="fas fa-user"></i>
+                    <span class="nav-text">Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+    <!-- Main Content -->
+    <main class="content fade-in">
+        <div class="glass-container">
+            <h2><i class="fas fa-wallet me-2"></i>Budget Management</h2>
+            
+            <!-- Budget Summary -->
+            <div class="budget-summary">
+                <h5><i class="fas fa-chart-pie me-2"></i>Budget Summary</h5>
+                <div class="summary-item">
+                    <span>Total Income:</span>
+                    <span class="income" id="total-income">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Total Expenses:</span>
+                    <span class="expense" id="total-expenses">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Remaining Balance:</span>
+                    <span class="income" id="remaining-balance">₹0.00</span>
+                </div>
+            </div>
+            
+            <!-- Expense Form -->
+            <div class="row">
+                <div class="col-md-6">
+                    <select class="form-control" id="entry-type" required>
+                        <option value="">Select Type</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <form id="expense-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="expense-name" placeholder="Title" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" id="expense-amount" placeholder="Amount" min="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <select class="form-control category-select" id="expense-category" required>
+                            <option value="">Select Category</option>
+                            <option value="seeds">Seeds & Plants</option>
+                            <option value="equipment">Equipment</option>
+                            <option value="labor">Labor</option>
+                            <option value="fertilizer">Fertilizers</option>
+                            <option value="transport">Transportation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="date" class="form-control" id="expense-date" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus-circle me-2"></i>Add Expense
+                </button>
+            </form>
+            
+            <!-- Expense List -->
+            <div class="expense-list">
+                <h5><i class="fas fa-list me-2"></i>Recent Expenses</h5>
+                
+               
+        </div>
+        <div class="chart-container">
+        <canvas id="pieChart" width="250" height="125"></canvas>
+    </div>
+        <div class="chart-container">
+<canvas id="barChart" width="250" height="125"></canvas>
+</div>
+
+    </main>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set default date to today
+        document.getElementById('expense-date').valueAsDate = new Date();
+        
+        // Toggle sidebar collapse/expand
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.glassy-sidebar');
+            const content = document.querySelector('.content');
+            
+            if (window.innerWidth > 992) {
+                // Desktop view - partial collapse
+                sidebar.classList.toggle('sidebar-collapsed');
+                content.classList.toggle('content-expanded');
+            } else {
+                // Mobile view - full collapse
+                sidebar.classList.toggle('sidebar-show');
+            }
+        }
+        
+        // Highlight active menu item
+        document.querySelectorAll('.sidebar li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar li').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                // In a real app, you would handle the logout process here
+                alert('You have been logged out. Redirecting to login page...');
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // Expense form submission
+        document.getElementById('expense-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const type = document.getElementById('entry-type').value;
+    const name = document.getElementById('expense-name').value;
+    const amount = parseFloat(document.getElementById('expense-amount').value).toFixed(2);
+    const category = document.getElementById('expense-category').value;
+    const date = document.getElementById('expense-date').value;
+
+    if (!type || !name || !amount || !category || !date) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const farmerId = user.id;
+
+        const response = await fetch('http://localhost:5002/api/budget/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                farmer_id: farmerId,
+                type,
+                title: name,
+                amount: parseFloat(amount),
+                category,
+                date
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} added successfully!`);
+            await loadExpenses();
+            await updateSummary();
+            await renderCharts(farmerId);
+            this.reset();
+            document.getElementById('expense-date').valueAsDate = new Date();
+        } else {
+            alert(data.message || `Failed to add ${type}.`);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert(`Error adding ${type}.`);
+    }
+});
+
+async function loadExpenses() {
+    const user = JSON.parse(localStorage.getItem("user"));
+const farmerId = user.id;
+
+
+
+    try {
+        const res = await fetch(`http://localhost:5002/api/budget/expenses?farmer_id=${farmerId}`);
+        const expenses = await res.json();
+
+        const expenseList = document.querySelector('.expense-list');
+        expenseList.innerHTML = `
+            <h5><i class="fas fa-list me-2"></i>Recent Expenses</h5>
+        `; // Reset list with heading
+
+        expenses.forEach(expense => {
+            const expenseItem = document.createElement('div');
+            expenseItem.className = 'expense-item fade-in';
+            expenseItem.innerHTML = `
+                <div class="expense-info">
+                    <div class="expense-details">
+                        <span class="expense-name">${expense.title}</span>
+                        <span class="expense-amount ${expense.type === 'income' ? 'income' : 'expense'}">₹${parseFloat(expense.amount).toFixed(2)}</span>
+                    </div>
+                    <div>
+                        <span class="expense-date">${new Date(expense.date).toLocaleDateString()}</span>
+                        <span class="category-badge">${expense.category}</span>
+                    </div>
+                </div>
+                <button class="delete-btn" data-id="${expense.id}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            expenseList.appendChild(expenseItem);
+        });
+
+    } catch (err) {
+        console.error('Error fetching expenses:', err);
+    }
+}
+async function updateSummary() {
+    const user = JSON.parse(localStorage.getItem("user"));
+const farmerId = user.id;
+
+
+
+    try {
+        const res = await fetch(`http://localhost:5002/api/budget/summary?farmer_id=${farmerId}`);
+        const summary = await res.json();
+
+        const totalIncome = summary.totalIncome || 0;
+        const totalExpenses = summary.totalExpenses || 0;
+        const remaining = totalIncome - totalExpenses;
+
+        document.getElementById('total-income').innerText = `₹${parseFloat(totalIncome).toFixed(2)}`;
+        document.getElementById('total-expenses').innerText = `₹${parseFloat(totalExpenses).toFixed(2)}`;
+        document.getElementById('remaining-balance').innerText = `₹${parseFloat(remaining).toFixed(2)}`;
+    } catch (err) {
+        console.error('Error updating summary:', err);
+    }
+}
+
+
+
+// ✅ Call loadExpenses when page loads
+
+           
+        // Delete expense functionality
+        document.addEventListener('click', async function(e) {
+    if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+        const deleteBtn = e.target.closest('.delete-btn');
+        const expenseId = deleteBtn.dataset.id; // Get real id
+        const expenseItem = deleteBtn.closest('.expense-item');
+
+        if (confirm('Are you sure you want to delete this expense?')) {
+            try {
+                const response = await fetch(`http://localhost:5002/api/budget/delete/${expenseId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Expense deleted successfully!');
+                    expenseItem.remove();
+                    await loadExpenses();
+                    await updateSummary();
+                } else {
+                    alert('Failed to delete expense.');
+                }
+            } catch (err) {
+                console.error('Error deleting expense:', err);
+                alert('Error deleting expense.');
+            }
+        }
+    }
+});
+
+        
+        
+        // Add animation to existing items on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = document.querySelectorAll('.expense-item');
+            items.forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.1}s`;
+
+            });
+        });
+        async function renderCharts(farmerId) {
+  const pieRes = await fetch(`http://localhost:5002/api/budget/expenses-by-category/${farmerId}`);
+  const barRes = await fetch(`http://localhost:5002/api/budget/monthly-expenses/${farmerId}`);
+  const pieData = await pieRes.json();
+  const barData = await barRes.json();
+
+  const pieChart = new Chart(document.getElementById("pieChart"), {
+    type: "pie",
+    data: {
+      labels: pieData.map(item => item.category),
+      datasets: [{
+        data: pieData.map(item => item.total),
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#8e44ad", "#2ecc71"]
+      }]
+    }
+  });
+
+  const barChart = new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+      labels: barData.map(item => item.month),
+      datasets: [{
+        label: "Monthly Expenses",
+        data: barData.map(item => item.total),
+        backgroundColor: "#3498db"
+      }]
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadExpenses();
+    await updateSummary();
+    
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+        await renderCharts(user.id);
+    }
+});
+
+
+
+
+    </script>
+</body>
+</html>
